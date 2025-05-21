@@ -1,0 +1,55 @@
+Problema: Validação da lista de adjacência
+
+
+
+import java.util.*;
+
+public class GrafoValidador {
+
+    public static boolean validarGrafoNaoDirecionado(List<List<Integer>> grafo) {
+        int V = grafo.size();
+
+        for (int u = 0; u < V; u++) {
+            Set<Integer> vizinhos = new HashSet<>();
+            for (int v : grafo.get(u)) {
+
+                // 1. Verifica se está no intervalo válido
+                if (v < 0 || v >= V) {
+                    return false;
+                }
+
+                // 2. Verifica se há auto-loop
+                if (u == v) {
+                    return false;
+                }
+
+                // 3. Verifica se há arestas paralelas
+                if (!vizinhos.add(v)) {
+                    return false;
+                }
+
+                // 4. Verifica simetria da conexão
+                if (!grafo.get(v).contains(u)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    // Exemplo de uso
+    public static void main(String[] args) {
+        List<List<Integer>> grafoValido = new ArrayList<>();
+        grafoValido.add(Arrays.asList(1, 2));  // 0
+        grafoValido.add(Arrays.asList(0, 2));  // 1
+        grafoValido.add(Arrays.asList(0, 1));  // 2
+
+        List<List<Integer>> grafoInvalido = new ArrayList<>();
+        grafoInvalido.add(Arrays.asList(1, 1));  // Arestas paralelas e falta de simetria
+        grafoInvalido.add(Arrays.asList(0));     // 1
+
+        System.out.println("Grafo válido? " + validarGrafoNaoDirecionado(grafoValido));    // true
+        System.out.println("Grafo válido? " + validarGrafoNaoDirecionado(grafoInvalido));  // false
+    }
+}
