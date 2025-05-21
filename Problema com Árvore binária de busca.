@@ -1,0 +1,99 @@
+import java.util.*;
+
+public class Main {
+
+    static class No {
+        String valor;
+        No esquerda, direita;
+
+        No(String valor) {
+            this.valor = valor;
+            this.esquerda = null;
+            this.direita = null;
+        }
+    }
+
+    static class ArvoreBinaria {
+        No raiz;
+
+        void inserir(String valor) {
+            raiz = inserirRec(raiz, valor);
+        }
+
+        private No inserirRec(No no, String valor) {
+            if (no == null) return new No(valor);
+            if (valor.compareTo(no.valor) < 0) {
+                no.esquerda = inserirRec(no.esquerda, valor);
+            } else if (valor.compareTo(no.valor) > 0) {
+                no.direita = inserirRec(no.direita, valor);
+            }
+            return no;
+        }
+
+        boolean buscar(String valor) {
+            return buscarRec(raiz, valor);
+        }
+
+        private boolean buscarRec(No no, String valor) {
+            if (no == null) return false;
+            if (valor.equals(no.valor)) return true;
+            if (valor.compareTo(no.valor) < 0) return buscarRec(no.esquerda, valor);
+            else return buscarRec(no.direita, valor);
+        }
+
+        void infixa(No no) {
+            if (no != null) {
+                infixa(no.esquerda);
+                System.out.print(no.valor + " ");
+                infixa(no.direita);
+            }
+        }
+
+        void prefixa(No no) {
+            if (no != null) {
+                System.out.print(no.valor + " ");
+                prefixa(no.esquerda);
+                prefixa(no.direita);
+            }
+        }
+
+        void posfixa(No no) {
+            if (no != null) {
+                posfixa(no.esquerda);
+                posfixa(no.direita);
+                System.out.print(no.valor + " ");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        ArvoreBinaria arvore = new ArvoreBinaria();
+
+        while (sc.hasNext()) {
+            String linha = sc.nextLine().trim();
+
+            if (linha.startsWith("I ")) {
+                String valor = linha.substring(2);
+                arvore.inserir(valor);
+            } else if (linha.startsWith("P ")) {
+                String valor = linha.substring(2);
+                if (arvore.buscar(valor)) {
+                    System.out.println(valor + " existe");
+                } else {
+                    System.out.println(valor + " nao existe");
+                }
+            } else if (linha.equals("INFIXA")) {
+                arvore.infixa(arvore.raiz);
+                System.out.println();
+            } else if (linha.equals("PREFIXA")) {
+                arvore.prefixa(arvore.raiz);
+                System.out.println();
+            } else if (linha.equals("POSFIXA")) {
+                arvore.posfixa(arvore.raiz);
+                System.out.println();
+            }
+        }
+        sc.close();
+    }
+}
